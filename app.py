@@ -54,7 +54,6 @@ st.write("### 📋 Existing Calls")
 try:
     calls = supabase.table("service_calls").select("*").order("open_date", desc=True).execute()
     st.write("Raw data returned from Supabase:")
-    st.json(calls.model_dump())  # Debug: show full response
     if calls.data:
         st.dataframe(calls.data, use_container_width=True)
     else:
