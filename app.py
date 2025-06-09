@@ -30,6 +30,15 @@ with st.form("new_call_form", clear_on_submit=True):
     col1, col2 = st.columns(2)
     with col1:
         open_date = st.date_input("Open Date", value=datetime.date.today())
+        # Get all unique client names from existing data
+        client_result = supabase.table("service_calls").select("client").execute()
+        clients = sorted({row["client"] for row in client_result.data if row.get("client")})
+
+        # Autocomplete-style field with fallback for new names
+        client = st.selectbox("Client", options=clients + ["<Add new client>"])
+        if client == "<Add new client>":
+            client = st.text_input("Enter new client name")
+
         client = st.text_input("Client")
         department = st.text_input("Department")
         service_tag = st.text_input("Service Tag")
