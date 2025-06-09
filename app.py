@@ -51,8 +51,14 @@ with st.form("new_call_form", clear_on_submit=True):
 
 # --- DISPLAY TABLE OF CALLS ---
 st.write("### 📋 Existing Calls")
-calls = supabase.table("service_calls").select("*").order("open_date", desc=True).execute()
-if calls.data is None:
-    st.error("Error loading data.")
-else:
-    st.dataframe(calls.data, use_container_width=True)
+
+try:
+    calls = supabase.table("service_calls").select("*").order("open_date", desc=True).execute()
+    st.write("Raw data returned from Supabase:")
+    st.json(calls.model_dump())  # Debug: show full response
+    if calls.data:
+        st.dataframe(calls.data, use_container_width=True)
+    else:
+        st.warning("No calls found in the database.")
+except Exception as e:
+    st.error(f"Failed to load data: {e}")
