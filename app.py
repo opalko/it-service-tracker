@@ -2,6 +2,20 @@ import streamlit as st
 from supabase import create_client, Client
 import datetime
 
+# Replace with your secret password
+PASSWORD = "3bigdogsR0kforN0w"
+
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+if not st.session_state.authenticated:
+    pwd = st.text_input("Enter password:", type="password")
+    if st.button("Login") and pwd == PASSWORD:
+        st.session_state.authenticated = True
+    elif pwd and pwd != PASSWORD:
+        st.error("Wrong password")
+    st.stop()
+
 # Replace with your Supabase details
 SUPABASE_URL = "https://mlieytogymwftsurhrbg.supabase.co/"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1saWV5dG9neW13ZnRzdXJocmJnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkxNDU2NTAsImV4cCI6MjA2NDcyMTY1MH0.BtXRDlTxDSFgtXTeTclawD45R4ydj0juF0pF19LKxNw"
