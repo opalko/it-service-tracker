@@ -51,45 +51,44 @@ with st.form("new_call_form", clear_on_submit=True):
     col1, col2 = st.columns(2)
     with col1:
         open_date = st.date_input("Open Date", value=datetime.date.today())
-#---
-
         client = autocomplete_field("Client", "client")
         department = autocomplete_field("Department", "department")
         call_type = autocomplete_field("Call Type", "call_type")
         status = autocomplete_field("Status", "status")
-""""
-        # Get all unique client names from existing data
-        client_result = supabase.table("service_calls").select("client").execute()
-        clients = sorted({row["client"] for row in client_result.data if row.get("client")})
 
-        # Add a default placeholder
-        client_options = ["Select a client..."] + clients + ["<Add new client>"]
-        client = st.selectbox("Client", options=client_options)
-
-        # Show text input only if "<Add new client>" is selected
-        if client == "<Add new client>":
-            client = st.text_input("Enter new client name")
-        elif client == "Select a client...":
-            client = ""  # Optional: force re-selection or validation later
+#
+#        # Get all unique client names from existing data
+#        client_result = supabase.table("service_calls").select("client").execute()
+#        clients = sorted({row["client"] for row in client_result.data if row.get("client")})
+#
+#        # Add a default placeholder
+#        client_options = ["Select a client..."] + clients + ["<Add new client>"]
+#        client = st.selectbox("Client", options=client_options)
+#
+#        # Show text input only if "<Add new client>" is selected
+#        if client == "<Add new client>":
+#            client = st.text_input("Enter new client name")
+#        elif client == "Select a client...":
+#            client = ""  # Optional: force re-selection or validation later
 #--
-        # Get all unique department names from existing data
-        department_result = supabase.table("service_calls").select("department").execute()
-        department = sorted({row["department"] for row in department_result.data if row.get("department")})
-
-        # Add a default placeholder
-        department_options = ["Select a department..."] + department + ["<Add new department>"]
-
-        department = st.selectbox("Department", options=department_options)
-
-        # Show text input only if "<Add new department>" is selected
-        if department == "<Add new department>":
-            department = st.text_input("Enter new department name")
-        elif department == "Select a department...":
-            department = ""  # Optional: force re-selection or validation later
-            
-        service_tag = st.text_input("Service Tag")
-        call_type = st.selectbox("Call Type", ["Hardware", "Software", "Network", "Other"])
-"""
+#        # Get all unique department names from existing data
+#        department_result = supabase.table("service_calls").select("department").execute()
+#        department = sorted({row["department"] for row in department_result.data if row.get("department")})
+#
+#        # Add a default placeholder
+#        department_options = ["Select a department..."] + department + ["<Add new department>"]
+#
+#        department = st.selectbox("Department", options=department_options)
+#
+#        # Show text input only if "<Add new department>" is selected
+#        if department == "<Add new department>":
+#            department = st.text_input("Enter new department name")
+#        elif department == "Select a department...":
+#            department = ""  # Optional: force re-selection or validation later
+#            
+#        service_tag = st.text_input("Service Tag")
+#        call_type = st.selectbox("Call Type", ["Hardware", "Software", "Network", "Other"])
+#
     with col2:
         issue = st.text_area("Issue")
         resolution = st.text_area("Resolution")
