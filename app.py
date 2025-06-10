@@ -45,9 +45,20 @@ with st.form("new_call_form", clear_on_submit=True):
         elif client == "Select a client...":
             client = ""  # Optional: force re-selection or validation later
 
-        department = st.selectbox("Department", options=departments + ["<Add new department>"])
+        # Get all unique department names from existing data
+        department_result = supabase.table("service_calls").select("department").execute()
+        department = sorted({row["department"] for row in department_result.data if row.get("department")})
+
+        # Add a default placeholder
+        department_options = ["Select a department..."] + department + ["<Add new department>"]
+
+        department = st.selectbox("Department", options=department_options)
+
+        # Show text input only if "<Add new department>" is selected
         if department == "<Add new department>":
             department = st.text_input("Enter new department name")
+        elif department == "Select a department...":
+            department = ""  # Optional: force re-selection or validation later
             
         service_tag = st.text_input("Service Tag")
         call_type = st.selectbox("Call Type", ["Hardware", "Software", "Network", "Other"])
