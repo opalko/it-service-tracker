@@ -39,8 +39,10 @@ with st.form("new_call_form", clear_on_submit=True):
         if client == "<Add new client>":
             client = st.text_input("Enter new client name")
 
-        client = st.text_input("Client")
-        department = st.text_input("Department")
+        department = st.selectbox("Department", options=departments + ["<Add new department>"])
+        if department == "<Add new department>":
+            department = st.text_input("Enter new department name")
+            
         service_tag = st.text_input("Service Tag")
         call_type = st.selectbox("Call Type", ["Hardware", "Software", "Network", "Other"])
     with col2:
