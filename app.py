@@ -53,9 +53,11 @@ with st.form("new_call_form", clear_on_submit=True):
         open_date = st.date_input("Open Date", value=datetime.date.today())
 #---
 
-client = autocomplete_field("Client", "client")
-department = autocomplete_field("Department", "department")
-"""
+        client = autocomplete_field("Client", "client")
+        department = autocomplete_field("Department", "department")
+        call_type = autocomplete_field("Call Type", "call_type")
+        status = autocomplete_field("Status", "status")
+""""
         # Get all unique client names from existing data
         client_result = supabase.table("service_calls").select("client").execute()
         clients = sorted({row["client"] for row in client_result.data if row.get("client")})
