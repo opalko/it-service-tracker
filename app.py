@@ -34,10 +34,16 @@ with st.form("new_call_form", clear_on_submit=True):
         client_result = supabase.table("service_calls").select("client").execute()
         clients = sorted({row["client"] for row in client_result.data if row.get("client")})
 
-        # Autocomplete-style field with fallback for new names
-        client = st.selectbox("Client", options=clients + ["<Add new client>"])
+        # Add a default placeholder
+        client_options = ["Select a client..."] + clients + ["<Add new client>"]
+
+        client = st.selectbox("Client", options=client_options)
+
+        # Show text input only if "<Add new client>" is selected
         if client == "<Add new client>":
             client = st.text_input("Enter new client name")
+        elif client == "Select a client...":
+            client = ""  # Optional: force re-selection or validation later
 
         department = st.selectbox("Department", options=departments + ["<Add new department>"])
         if department == "<Add new department>":
