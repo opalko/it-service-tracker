@@ -8,13 +8,22 @@ PASSWORD = "3bigdogsR0kforN0w"
 def autocomplete_field(label, field_name):
     result = supabase.table("service_calls").select(field_name).execute()
     entries = sorted({row[field_name] for row in result.data if row.get(field_name)})
-    result_options = ["Select one..."] + entries + ["Add new"]
-    choice = st.selectbox(label, options=entries + [f"<Add new {label.lower()}>"])
-    if choice.startswith("<Add new"):
-        choice = st.text_input(f"Enter new {label.lower()}")
+
+    # Combine all options into one list
+    options = ["Select one..."] + entries + [f"<Add new {label.lower()}>"]
+
+    # Dropdown
+    choice = st.selectbox(label, options=options)
+
+    # If user chooses to add new value
+    if choice == f"<Add new {label.lower()}>":
+        new_value = st.text_input(f"Enter new {label.lower()}")
+        return new_value
     elif choice == "Select one...":
-        choice = ""
-    return choice
+        return ""
+    else:
+        return choice
+
 
 
 if "authenticated" not in st.session_state:
