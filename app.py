@@ -90,8 +90,7 @@ with st.form("new_call_form", clear_on_submit=True):
 #            department = ""  # Optional: force re-selection or validation later
 #            
         service_tag = st.text_input("Service Tag")
-        call_type = st.selectbox("Call Type", ["Hardware", "Software", "Network", "Other"])
-#
+ #
     with col2:
         issue = st.text_area("Issue")
         resolution = st.text_area("Resolution")
