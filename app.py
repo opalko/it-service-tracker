@@ -9,16 +9,19 @@ def autocomplete_field(label, field_name):
     result = supabase.table("service_calls").select(field_name).execute()
     entries = sorted({row[field_name] for row in result.data if row.get(field_name)})
 
-    # Combine all options into one list
+    # Create a unique key for this field
+    key_prefix = label.lower().replace(" ", "_")
+    select_key = f"{key_prefix}_select"
+    input_key = f"{key_prefix}_input"
+
+    # Dropdown with special options
     options = ["Select one..."] + entries + [f"<Add new {label.lower()}>"]
+    choice = st.selectbox(label, options=options, key=select_key)
 
-    # Dropdown
-    choice = st.selectbox(label, options=options)
-
-    # If user chooses to add new value
+    # If user chooses to add new entry
     if choice == f"<Add new {label.lower()}>":
-        new_value = st.text_input(f"Enter new {label.lower()}")
-        return new_value
+        st.text_input(f"Enter new {label.lower()}", key=input_key)
+        return st.session_state.get(input_key, "")
     elif choice == "Select one...":
         return ""
     else:
