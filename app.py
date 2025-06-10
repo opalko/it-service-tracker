@@ -9,24 +9,23 @@ def autocomplete_field(label, field_name):
     result = supabase.table("service_calls").select(field_name).execute()
     entries = sorted({row[field_name] for row in result.data if row.get(field_name)})
 
-    # Create a unique key for this field
-    key_prefix = label.lower().replace(" ", "_")
-    select_key = f"{key_prefix}_select"
-    input_key = f"{key_prefix}_input"
+    key_base = label.lower().replace(" ", "_")
+    selectbox_key = f"{key_base}_selectbox"
+    input_key = f"{key_base}_input"
 
-    # Dropdown with special options
     options = ["Select one..."] + entries + [f"<Add new {label.lower()}>"]
-    choice = st.selectbox(label, options=options, key=select_key)
+    selected = st.selectbox(label, options=options, key=selectbox_key)
 
-    # If user chooses to add new entry
-    if choice == f"<Add new {label.lower()}>":
-        st.text_input(f"Enter new {label.lower()}", key=input_key)
-        return st.session_state.get(input_key, "")
-    elif choice == "Select one...":
+    # This input always appears, but we disable it unless "Add new..." is selected
+    is_adding = selected == f"<Add new {label.lower()}>"
+    text_value = st.text_input(f"Enter new {label.lower()}", key=input_key, disabled=not is_adding)
+
+    if is_adding:
+        return text_value
+    elif selected == "Select one...":
         return ""
     else:
-        return choice
-
+        return selected
 
 
 if "authenticated" not in st.session_state:
