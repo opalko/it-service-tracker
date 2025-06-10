@@ -5,6 +5,18 @@ import datetime
 # Replace with your secret password
 PASSWORD = "3bigdogsR0kforN0w"
 
+def autocomplete_field(label, field_name):
+    result = supabase.table("service_calls").select(field_name).execute()
+    entries = sorted({row[field_name] for row in result.data if row.get(field_name)})
+    result_options = ["Select one..."] + entries + ["Add new"]
+    choice = st.selectbox(label, options=entries + [f"<Add new {label.lower()}>"])
+    if choice.startswith("<Add new"):
+        choice = st.text_input(f"Enter new {label.lower()}")
+    elif choice == "Select one...":
+        choice = ""
+    return choice
+
+
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
@@ -30,13 +42,17 @@ with st.form("new_call_form", clear_on_submit=True):
     col1, col2 = st.columns(2)
     with col1:
         open_date = st.date_input("Open Date", value=datetime.date.today())
+#---
+
+client = autocomplete_field("Client", "client")
+department = autocomplete_field("Department", "department")
+""""
         # Get all unique client names from existing data
         client_result = supabase.table("service_calls").select("client").execute()
         clients = sorted({row["client"] for row in client_result.data if row.get("client")})
 
         # Add a default placeholder
         client_options = ["Select a client..."] + clients + ["<Add new client>"]
-
         client = st.selectbox("Client", options=client_options)
 
         # Show text input only if "<Add new client>" is selected
@@ -44,7 +60,7 @@ with st.form("new_call_form", clear_on_submit=True):
             client = st.text_input("Enter new client name")
         elif client == "Select a client...":
             client = ""  # Optional: force re-selection or validation later
-
+#--
         # Get all unique department names from existing data
         department_result = supabase.table("service_calls").select("department").execute()
         department = sorted({row["department"] for row in department_result.data if row.get("department")})
@@ -59,7 +75,7 @@ with st.form("new_call_form", clear_on_submit=True):
             department = st.text_input("Enter new department name")
         elif department == "Select a department...":
             department = ""  # Optional: force re-selection or validation later
-            
+"""            
         service_tag = st.text_input("Service Tag")
         call_type = st.selectbox("Call Type", ["Hardware", "Software", "Network", "Other"])
     with col2:
