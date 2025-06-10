@@ -55,7 +55,7 @@ with st.form("new_call_form", clear_on_submit=True):
 
 client = autocomplete_field("Client", "client")
 department = autocomplete_field("Department", "department")
-""""
+"""
         # Get all unique client names from existing data
         client_result = supabase.table("service_calls").select("client").execute()
         clients = sorted({row["client"] for row in client_result.data if row.get("client")})
