@@ -11,21 +11,22 @@ def autocomplete_field(label, field_name):
 
     key_base = label.lower().replace(" ", "_")
     selectbox_key = f"{key_base}_selectbox"
-    input_key = f"{key_base}_input"
+    textinput_key = f"{key_base}_input"
 
     options = ["Select one..."] + entries + [f"<Add new {label.lower()}>"]
     selected = st.selectbox(label, options=options, key=selectbox_key)
 
-    # This input always appears, but we disable it unless "Add new..." is selected
-    is_adding = selected == f"<Add new {label.lower()}>"
-    text_value = st.text_input(f"Enter new {label.lower()}", key=input_key, disabled=not is_adding)
+    # Always show the text input, even if unused
+    new_value = st.text_input(f"Enter new {label.lower()}", key=textinput_key)
 
-    if is_adding:
-        return text_value
+    # Return the proper value
+    if selected == f"<Add new {label.lower()}>":
+        return new_value
     elif selected == "Select one...":
         return ""
     else:
         return selected
+
 
 
 if "authenticated" not in st.session_state:
