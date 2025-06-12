@@ -99,7 +99,21 @@ with st.form("new_call_form", clear_on_submit=True):
 
     submitted = st.form_submit_button("Submit")
 
-    if submitted:
+if submitted:
+    # Basic validation
+    missing_fields = []
+    if not client:
+        missing_fields.append("Client")
+    if not call_type:
+        missing_fields.append("Call Type")
+    if not status:
+        missing_fields.append("Status")
+    if not issue:
+        missing_fields.append("Issue")
+
+    if missing_fields:
+        st.error(f"Please fill in the following required fields: {', '.join(missing_fields)}")
+    else:
         data = {
             "open_date": open_date.isoformat(),
             "client": client,
@@ -113,10 +127,10 @@ with st.form("new_call_form", clear_on_submit=True):
         }
         if status == "Closed":
             data["closed_on"] = closed_on.isoformat()
-# seeing what the problem is:
+
         st.write("Form data being sent:")
         st.json(data)
-#
+
         result = supabase.table("service_calls").insert(data).execute()
         if result.error:
             st.error("Failed to submit data.")
