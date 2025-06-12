@@ -130,7 +130,7 @@ if submitted:
 
         st.write("Form data being sent:")
         st.json(data)
-
+        st.write(f"client = {repr(client)}")
         result = supabase.table("service_calls").insert(data).execute()
         if result.error:
             st.error("Failed to submit data.")
