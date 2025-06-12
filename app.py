@@ -98,7 +98,7 @@ with st.form("new_call_form", clear_on_submit=True):
                 data["closed_on"] = closed_on.isoformat()
         
             # Remove created_at if it somehow snuck in
-            data.pop("created_at", None)
+            data = {k: v for k, v in data.items() if v not in [None, ""]}
 
             st.subheader("📦 Final data going to Supabase")
             st.json(data)
