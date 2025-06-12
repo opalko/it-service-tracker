@@ -109,9 +109,10 @@ with st.form("new_call_form", clear_on_submit=True):
             "issue": issue,
             "resolution": resolution,
             "status": status,
-            "closed_on": closed_on.isoformat() if status == "Closed" else None,
             "notes": notes,
         }
+        if status == "Closed":
+            data["closed_on"] = closed_on.isoformat()
 # seeing what the problem is:
         st.write("Form data being sent:")
         st.json(data)
