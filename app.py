@@ -1,6 +1,6 @@
 import streamlit as st
 from supabase import create_client, Client
-import datetime
+import datetime 
 
 # Replace with your secret password
 PASSWORD = "3bigdogsR0kforN0w"
@@ -107,6 +107,9 @@ with st.form("new_call_form", clear_on_submit=True):
                 st.warning(f"created_at is present: {repr(data['created_at'])}")
             else:
                 st.success("created_at is NOT in the data — default should apply")
+ 
+            data["created_at"] = datetime.datetime.utcnow().isoformat() + "Z"
+
             result = supabase.table("service_calls").insert(data).execute()
             if result.error:
                 st.error("Failed to submit data.")
