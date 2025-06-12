@@ -87,12 +87,13 @@ with st.form("new_call_form", clear_on_submit=True):
                 "open_date": open_date.isoformat(),
                 "client": client,
                 "department": department,
-                "service_tag": service_tag,
+                "service_tag": service_tag or "",       # Required
                 "call_type": call_type,
-                "issue": issue,
-                "resolution": resolution,
+                "issue": issue or "",
+                "resolution": resolution or "",         # Required
                 "status": status,
-                "notes": notes
+                "notes": notes or "",                   # Required
+                "created_at": datetime.datetime.utcnow().isoformat() + "Z"
             }
             if status == "Closed":
                 data["closed_on"] = closed_on.isoformat()
