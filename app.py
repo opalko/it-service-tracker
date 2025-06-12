@@ -68,50 +68,50 @@ with st.form("new_call_form", clear_on_submit=True):
 
     submitted = st.form_submit_button("Submit")
 
-if submitted:
-    # Basic validation
-    missing_fields = []
-    if not client:
-        missing_fields.append("Client")
-    if not call_type:
-        missing_fields.append("Call Type")
-    if not status:
-        missing_fields.append("Status")
-    if not issue:
-        missing_fields.append("Issue")
+    if submitted:
+        # Basic validation
+        missing_fields = []
+        if not client:
+            missing_fields.append("Client")
+        if not call_type:
+            missing_fields.append("Call Type")
+        if not status:
+            missing_fields.append("Status")
+        if not issue:
+            missing_fields.append("Issue")
 
-    if missing_fields:
-        st.error(f"Please fill in the following required fields: {', '.join(missing_fields)}")
-    else:
-        data = {
-            "open_date": open_date.isoformat(),
-            "client": client,
-            "department": department,
-            "service_tag": service_tag,
-            "call_type": call_type,
-            "issue": issue,
-            "resolution": resolution,
-            "status": status,
-            "notes": notes
-        }
-        if status == "Closed":
-            data["closed_on"] = closed_on.isoformat()
+        if missing_fields:
+            st.error(f"Please fill in the following required fields: {', '.join(missing_fields)}")
+        else:
+            data = {
+                "open_date": open_date.isoformat(),
+                "client": client,
+                "department": department,
+                "service_tag": service_tag,
+                "call_type": call_type,
+                "issue": issue,
+                "resolution": resolution,
+                "status": status,
+                "notes": notes
+            }
+            if status == "Closed":
+                data["closed_on"] = closed_on.isoformat()
         
-        # Remove created_at if it somehow snuck in
-        data.pop("created_at", None)
+            # Remove created_at if it somehow snuck in
+            data.pop("created_at", None)
 
-        st.subheader("📦 Final data going to Supabase")
-        st.json(data)
+            st.subheader("📦 Final data going to Supabase")
+            st.json(data)
 
-        if "created_at" in data:
-            st.warning(f"created_at is present: {repr(data['created_at'])}")
-        else:
-            st.success("created_at is NOT in the data — default should apply")
-        result = supabase.table("service_calls").insert(data).execute()
-        if result.error:
-            st.error("Failed to submit data.")
-        else:
-            st.success("Call logged successfully!")
+            if "created_at" in data:
+                st.warning(f"created_at is present: {repr(data['created_at'])}")
+            else:
+                st.success("created_at is NOT in the data — default should apply")
+            result = supabase.table("service_calls").insert(data).execute()
+            if result.error:
+                st.error("Failed to submit data.")
+            else:
+                st.success("Call logged successfully!")
 
 # --- DISPLAY TABLE OF CALLS ---
 st.write("### 📋 Existing Calls")
