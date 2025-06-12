@@ -89,7 +89,7 @@ if submitted:
         st.error(f"Please fill in the following required fields: {', '.join(missing_fields)}")
     else:
         data = {
-            "created_at": None  # even implicitly
+            "created_at":, None  # even implicitly
             "open_date": open_date.isoformat(),
             "client": client,
             "department": department,
