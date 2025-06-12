@@ -112,6 +112,10 @@ with st.form("new_call_form", clear_on_submit=True):
             "closed_on": closed_on.isoformat() if status == "Closed" else None,
             "notes": notes,
         }
+# seeing what the problem is:
+        st.write("Form data being sent:")
+        st.json(data)
+#
         result = supabase.table("service_calls").insert(data).execute()
         if result.error:
             st.error("Failed to submit data.")
