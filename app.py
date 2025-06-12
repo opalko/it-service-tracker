@@ -115,6 +115,7 @@ if submitted:
         st.error(f"Please fill in the following required fields: {', '.join(missing_fields)}")
     else:
         data = {
+            "created_at": None  # even implicitly
             "open_date": open_date.isoformat(),
             "client": client,
             "department": department,
@@ -128,9 +129,13 @@ if submitted:
         if status == "Closed":
             data["closed_on"] = closed_on.isoformat()
 
-        st.write("Form data being sent:")
+        st.subheader("📦 Final data going to Supabase")
         st.json(data)
-        st.write(f"client = {repr(client)}")
+
+        if "created_at" in data:
+            st.warning(f"created_at is present: {repr(data['created_at'])}")
+        else:
+            st.success("created_at is NOT in the data — default should apply")
         result = supabase.table("service_calls").insert(data).execute()
         if result.error:
             st.error("Failed to submit data.")
