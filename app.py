@@ -27,11 +27,6 @@ def autocomplete_field(label, field_name):
     else:
         return selected
 
-def sanitize_data(data: dict):
-    return {k: v for k, v in data.items() if v not in [None, ""]}
-
-
-
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
@@ -89,7 +84,6 @@ if submitted:
         st.error(f"Please fill in the following required fields: {', '.join(missing_fields)}")
     else:
         data = {
-            "created_at": None,  # even implicitly
             "open_date": open_date.isoformat(),
             "client": client,
             "department": department,
@@ -98,10 +92,13 @@ if submitted:
             "issue": issue,
             "resolution": resolution,
             "status": status,
-            "notes": notes,
+            "notes": notes
         }
         if status == "Closed":
             data["closed_on"] = closed_on.isoformat()
+        
+        # Remove created_at if it somehow snuck in
+        data.pop("created_at", None)
 
         st.subheader("📦 Final data going to Supabase")
         st.json(data)
@@ -110,7 +107,7 @@ if submitted:
             st.warning(f"created_at is present: {repr(data['created_at'])}")
         else:
             st.success("created_at is NOT in the data — default should apply")
-        result = supabase.table("service_calls").insert(sanitize_data(data)).execute()
+        result = supabase.table("service_calls").insert(data).execute()
         if result.error:
             st.error("Failed to submit data.")
         else:
