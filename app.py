@@ -131,8 +131,13 @@ if calls.data:
             }
 
             try:
+                st.write("Updating ID:", selected_call["id"])
+                st.write("With data:", update_data)
                 supabase.table("service_calls").update(update_data).eq("id", selected_call["id"]).execute()
+                response = supabase.table("service_calls").update(update_data).eq("id", selected_call["id"]).execute()
+                st.write("Update response:", response)
                 st.success("Call updated successfully!")
+                time.sleep(1.5)
                 st.rerun()
             except Exception as e:
                 st.error("Failed to update call.")
