@@ -5,6 +5,19 @@ import datetime
 # Replace with your secret password
 PASSWORD = "3bigdogsR0kforN0w"
 
+data = {
+    "open_date": open_date.isoformat(),
+    "client": client,
+    "department": department,
+    "service_tag": service_tag or "",
+    "call_type": call_type,
+    "issue": issue or "",
+    "resolution": resolution or "",
+    "status": status,
+    "notes": notes or "",
+    "created_at": datetime.datetime.utcnow().isoformat() + "Z"
+}
+
 def autocomplete_field(label, field_name):
     result = supabase.table("service_calls").select(field_name).execute()
     entries = sorted({row[field_name] for row in result.data if row.get(field_name)})
