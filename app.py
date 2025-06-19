@@ -133,7 +133,7 @@ if calls.data:
             try:
                 supabase.table("service_calls").update(update_data).eq("id", selected_call["id"]).execute()
                 st.success("Call updated successfully!")
-                st.experimental_rerun()
+                st.rerun()
             except Exception as e:
                 st.error("Failed to update call.")
                 st.text(str(e))
