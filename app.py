@@ -1,6 +1,7 @@
 import streamlit as st
 from supabase import create_client, Client
-import datetime 
+import datetime
+import traceback 
 
 # Replace with your secret password
 PASSWORD = "3bigdogsR0kforN0w"
@@ -114,9 +115,6 @@ with st.form("new_call_form", clear_on_submit=True):
             # Remove created_at if it somehow snuck in
             data = {k: v for k, v in data.items() if v not in [None, ""]}
 
-            st.subheader("📦 Final data going to Supabase")
-            st.json(data)
-
             if "created_at" in data:
                 st.warning(f"created_at is present: {repr(data['created_at'])}")
             else:
@@ -132,11 +130,11 @@ with st.form("new_call_form", clear_on_submit=True):
                 result = supabase.table("service_calls").insert(data).execute()
                 st.success("Call logged successfully!")
             except Exception as e:
-                import traceback
-                st.error("Insert failed!")
-                st.text(str(e))
+                st.error("Insert failed:")
+                st.text("Exception type: " + type(e).__name__)
+                st.text("Exception message: " + str(e))
+                st.text("Traceback:")
                 st.text(traceback.format_exc())
-
 
 # --- DISPLAY TABLE OF CALLS ---
 st.write("### 📋 Existing Calls")
