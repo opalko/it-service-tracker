@@ -100,3 +100,42 @@ try:
         st.warning("No calls found in the database.")
 except Exception as e:
     st.error(f"Failed to load data: {e}")
+
+st.subheader("📝 Edit Existing Call")
+
+# Fetch all calls
+calls = supabase.table("service_calls").select("*").order("open_date", desc=True).execute()
+
+if calls.data:
+    # Create a dropdown to select a call by client/issue/ID
+    call_options = {f"{row['client']} – {row['issue']}": row for row in calls.data}
+    selected_label = st.selectbox("Select a call to edit", list(call_options.keys()))
+    selected_call = call_options[selected_label]
+
+    with st.form("edit_call_form"):
+        st.write(f"Editing call ID: {selected_call['id']}")
+
+        new_status = st.selectbox("Status", ["Open", "In Progress", "Closed"], index=["Open", "In Progress", "Closed"].index(selected_call["status"]))
+        new_resolution = st.text_area("Resolution", value=selected_call.get("resolution", ""))
+        new_notes = st.text_area("Notes", value=selected_call.get("notes", ""))
+        new_closed_on = st.date_input("Closed On", value=datetime.date.today() if not selected_call.get("closed_on") else datetime.date.fromisoformat(selected_call["closed_on"]), disabled=(new_status != "Closed"))
+
+        submitted = st.form_submit_button("Save Changes")
+
+        if submitted:
+            update_data = {
+                "status": new_status,
+                "resolution": new_resolution,
+                "notes": new_notes,
+                "closed_on": new_closed_on.isoformat() if new_status == "Closed" else None,
+            }
+
+            try:
+                supabase.table("service_calls").update(update_data).eq("id", selected_call["id"]).execute()
+                st.success("Call updated successfully!")
+                st.experimental_rerun()
+            except Exception as e:
+                st.error("Failed to update call.")
+                st.text(str(e))
+else:
+    st.info("No calls available to edit.")
