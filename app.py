@@ -122,10 +122,10 @@ with st.form("new_call_form", clear_on_submit=True):
                 st.success("created_at is NOT in the data — default should apply")
  
             data["created_at"] = datetime.datetime.utcnow().isoformat() + "Z"
-            if "id" in data:
-                st.error(f"🚫 ERROR: data includes id = {repr(data['id'])}")
-            else:
-                st.success("✅ OK: id is not in the insert data")
+
+            st.subheader("✅ Final field types to Supabase")
+            for k, v in data.items():
+                st.write(f"{k}: type={type(v).__name__}, value={repr(v)}")
 
             result = supabase.table("service_calls").insert(data).execute()
             if result.error:
