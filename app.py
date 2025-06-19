@@ -128,11 +128,15 @@ with st.form("new_call_form", clear_on_submit=True):
             for k, v in data.items():
                 st.write(f"{k}: type={type(v).__name__}, value={repr(v)}")
 
-            result = supabase.table("service_calls").insert(data).execute()
-            if result.error:
-                st.error("Failed to submit data.")
-            else:
+            try:
+                result = supabase.table("service_calls").insert(data).execute()
                 st.success("Call logged successfully!")
+            except Exception as e:
+                import traceback
+                st.error("Insert failed!")
+                st.text(str(e))
+                st.text(traceback.format_exc())
+
 
 # --- DISPLAY TABLE OF CALLS ---
 st.write("### 📋 Existing Calls")
