@@ -105,10 +105,10 @@ except Exception as e:
 st.subheader("📝 Edit Existing Call")
 
 # Fetch all calls (again for edit section)
-calls = supabase.table("service_calls").select("*").order("open_date", desc=True).execute()
+editable_calls = supabase.table("service_calls").select("*").order("open_date", desc=True).execute()
 
-if calls.data:
-    call_options = {f"{row['client']} – {row['issue']}": row for row in calls.data}
+if editable_calls.data:
+    call_options = {f"{row['client']} – {row['issue']}": row for row in editable_calls.data}
     selected_label = st.selectbox("Select a call to edit", list(call_options.keys()), key="edit_call_selector")
     selected_call = call_options[selected_label]
 
