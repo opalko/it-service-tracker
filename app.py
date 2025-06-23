@@ -131,6 +131,8 @@ if editable_calls.data:
             }
 
             try:
+                st.write("🔍 Attempting to update ID:", selected_call["id"])
+                st.write("🧾 Update data:", update_data)
                 supabase.table("service_calls").update(update_data).eq("id", selected_call["id"]).execute()
                 st.success("Call updated successfully!")
                 time.sleep(1.5)
