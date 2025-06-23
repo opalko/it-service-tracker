@@ -112,13 +112,13 @@ if editable_calls.data:
     selected_label = st.selectbox("Select a call to edit", list(call_options.keys()), key="edit_call_selector")
     selected_call = call_options[selected_label]
 
-    with st.form("edit_call_form"):
+    with st.form("edit_call_form_v2"):
         st.write(f"Editing call ID: {selected_call['id']}")
 
-        new_status = st.selectbox("Status", ["Open", "In Progress", "Closed"], index=["Open", "In Progress", "Closed"].index(selected_call["status"]))
-        new_resolution = st.text_area("Resolution", value=selected_call.get("resolution", ""))
-        new_notes = st.text_area("Notes", value=selected_call.get("notes", ""))
-        new_closed_on = st.date_input("Closed On", value=datetime.date.today() if not selected_call.get("closed_on") else datetime.date.fromisoformat(selected_call["closed_on"]), disabled=(new_status != "Closed"))
+        new_status = autocomplete_field("Status", "status", key_prefix="edit")
+        new_resolution = st.text_area("Resolution", value=selected_call.get("resolution", ""), key="edit_resolution")
+        new_notes = st.text_area("Notes", value=selected_call.get("notes", ""), key="edit_notes")
+        new_closed_on = st.date_input("Closed On", value=datetime.date.today() if not selected_call.get("closed_on") else datetime.date.fromisoformat(selected_call["closed_on"]), disabled=(new_status != "Closed"), key="edit_closed_on")
 
         edit_submitted = st.form_submit_button("Save Changes")
 
